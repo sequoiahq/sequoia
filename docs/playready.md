@@ -1,11 +1,11 @@
 ### Client Authentication
 
-PlayReady devices rely on two primary files for client authentication: `bgroupcert.dat` and `zgpriv.dat`. 
+PlayReady devices rely on two primary files for client authentication.
 
-- **`bgroupcert.dat`**: This is a group certificate issued by Microsoft specific to a device.
-- **`zgpriv.dat`**: A 32-byte ECC private key used in the process.
+- **`bgroupcert.dat`**: Group certificate issued by Microsoft specifically to a device.[1]
+- **`zgpriv.dat`**: A 32-byte ECC private signing key.
 
-The group certificate alone is not directly usable and requires integration with ECC encryption and signing keys. These keys may be pre-included with the provided files, but they can also be generated randomly if needed. 
+The group certificate alone is not usable and requires to be fitted with ECC encryption and a signing key.
 
 To integrate these into the certificate chain:
 1. A new certificate is created containing the respective ECC public keys (encryption/signing).
@@ -51,3 +51,8 @@ To decrypt the content keys:
 1. Use the previously generated encryption key to decrypt the ECC points.
 2. Combine the X and Y coordinates into a single ECC point.
 3. Extract the X coordinate, convert it to bytes, and use the latter 16 bytes to derive the content key.
+
+
+### Notes
+[1] In PlayReady, *some* devices share the same group certificate. I'm gonna talk about that in another commit but I want to acclare that if a
+    specific platform (e.g Amazon, Max) bans a specific manipulated provision, **it will only affect that provision**, not the device itself. That makes the possibility of *reprovisioning* devices (hell, even pyPlayready implemented that) because the new provision will not be blacklisted by the provider. Note that these certificates burn ~24h after provisioning that device, but you can reprovision the same group certificate as many times you want. Until now I didn't see any provider banning **the group certificate itself**, just Amazon unwhitelisting the provision in-house.
