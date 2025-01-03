@@ -71,17 +71,18 @@ pub struct CdmLicenseRequest {
     license_request: Vec<u8>,
 }
 
-/// Certificate for a Widevine-protected service
-///
-/// The Service Certificate is used to encrypt Client IDs in Licenses. This is also
-/// known as Privacy Mode and may be required for some services or for some devices.
+/* certificate for a Widevine-protected service
+
+the service certificate is used to encrypt client IDs in licenses. 
+this is also known as "Privacy Mode" and may be required for some services or for some devices.
+*/
 #[derive(Debug, PartialEq)]
 pub struct ServiceCertificate {
-    /// URL of the provider
+    // url of the provider
     pub provider_id: String,
-    /// Certificate serial number
+    /// cert serial number
     pub serial_number: Vec<u8>,
-    /// RSA public key of the certificate
+    /// rsa public key of cert
     pub public_key: RsaPublicKey,
 }
 
