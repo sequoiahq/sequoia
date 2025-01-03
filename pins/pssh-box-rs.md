@@ -103,4 +103,4 @@ continuous integration workflow for one recipe that works.
 
 ## License
 
-This project is licensed under the MIT license. For more information, see the `LICENSE` file.
+This project is licensed under the MIT license. For more information, see the `LICENSE` file
