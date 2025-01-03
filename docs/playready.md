@@ -1,3 +1,24 @@
+## Levels
+
+### SL150
+- **Description**: Development certificate.
+- **Capabilities**: 
+  - Useful for developing a PlayReady client but generally considered useless for streaming services.
+- **Limitations**: 
+  - Likely restricted to SD resolution.
+
+### SL2000
+- **Description**: Basic security for HD content.
+- **Capabilities**: 
+  - Supports device authentication and licensing mechanisms.
+  - Generally provides up to 1080p on Netflix, Disney+, and Amazon; 2160p on MAX and some devices *may* reach 2160p on AMZN.
+
+### SL3000
+- **Description**: Enhanced security features compared to SL2000.
+- **Capabilities**: 
+  - Better suited for higher resolution content (e.g., 2160p).
+  - Provides a secure environment without the risk of CDM revocation.
+
 ### Client Authentication
 
 PlayReady devices rely on two primary files for client authentication.
