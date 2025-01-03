@@ -1,3 +1,7 @@
+# PlayReady
+PlayReady is the DRM developed by Microsoft. This DRM is primarily used by major streaming services such as Netflix, Disney+, and others. This sysmem features different security levels, which often restrict the maximum resolution available for playback on various devices.
+
+
 ## Levels
 
 ### SL150
