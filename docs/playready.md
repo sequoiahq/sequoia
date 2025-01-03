@@ -1,0 +1,53 @@
+### Client Authentication
+
+PlayReady devices rely on two primary files for client authentication: `bgroupcert.dat` and `zgpriv.dat`. 
+
+- **`bgroupcert.dat`**: This is a group certificate issued by Microsoft specific to a device.
+- **`zgpriv.dat`**: A 32-byte ECC private key used in the process.
+
+The group certificate alone is not directly usable and requires integration with ECC encryption and signing keys. These keys may be pre-included with the provided files, but they can also be generated randomly if needed. 
+
+To integrate these into the certificate chain:
+1. A new certificate is created containing the respective ECC public keys (encryption/signing).
+2. This certificate is signed with the group private key.
+3. The signature includes the group public key, enabling server-side signature verification.
+
+The resulting activated certificate is known as `bdevcert.dat`.
+
+---
+
+### PSSH (Protection System Specific Header)
+
+A PlayReady PSSH comprises a PlayReady Object, which contains one or more PlayReady Object Records. Each record is identified by a type value. Currently, only type `1` is functional, corresponding to the PlayReady Header. This header contains XML encoded in UTF-16-LE, known as the WRM Header.
+
+---
+
+### License Request
+
+Client-server communication in PlayReady operates entirely through XML.
+
+- The WRM Header is embedded in the `ContentHeader` section of the license request.
+- To secure the communication, the WMRMServer public key encrypts the keys, ensuring only the server can read them.
+
+The encryption process involves the following steps:
+1. Generate a temporary ECC key for the request.
+2. Derive an AES key and IV by splitting the X coordinate of the ECC key into two halves.
+3. Encrypt the ECC key's X and Y coordinates using the WMRMServer public key via the ElGamal encryption algorithm. This produces a 128-byte `EncryptedKey`.
+4. Use the AES key and IV to encrypt the activated group certificate, with the IV prepended to the ciphertext.
+5. Create a SHA-256 digest from the `LA` section of the challenge and include it in the `SignedInfo` element of the XML.
+6. Sign this digest using the temporary encryption key (SHA-256, FIPS 186-3), generating the `SignatureValue`.
+
+The temporary signing key is also included in the challenge to allow the server to verify the signature.
+
+---
+
+### License
+
+Internally referred to as the XMR License, this license contains ElGamal-encrypted content keys.
+
+The structure includes containers defined by flags, tags, and lengths. A type value of `10` represents a ContentKey Object, capable of holding multiple encrypted content keys. Each key consists of two ECC points, each with a 32-byte X and Y coordinate (128 bytes total). 
+
+To decrypt the content keys:
+1. Use the previously generated encryption key to decrypt the ECC points.
+2. Combine the X and Y coordinates into a single ECC point.
+3. Extract the X coordinate, convert it to bytes, and use the latter 16 bytes to derive the content key.
