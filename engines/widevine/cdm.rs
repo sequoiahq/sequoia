@@ -167,12 +167,12 @@ impl Cdm {
         }
     }
 
-    // get the [`Device`] used by the CDM
+    // get the [`Device`] used by cdm
     pub fn device(&self) -> &Device {
         &self.inner.device
     }
 
-    /// Open a new session with the CDM
+    /// open new session with cdm
     pub fn open(&self) -> CdmSession {
         CdmSession {
             device: self.inner.device.clone(),
