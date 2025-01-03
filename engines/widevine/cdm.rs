@@ -65,7 +65,7 @@ pub struct CdmSession {
     service_certificate: Option<ServiceCertificate>,
 }
 
-/// License request using the CDM
+/// license request using the CDM
 pub struct CdmLicenseRequest {
     session: CdmSession,
     license_request: Vec<u8>,
