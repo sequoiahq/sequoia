@@ -156,7 +156,7 @@ impl From<LicenseType> for widevine_proto::license_protocol::LicenseType {
 }
 
 impl Cdm {
-    /// Create a new CDM using the given device
+    /// create a new CDM using the given device
     pub fn new(device: Device) -> Self {
         Self {
             inner: CdmInner {
