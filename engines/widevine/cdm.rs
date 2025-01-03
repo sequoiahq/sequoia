@@ -186,9 +186,9 @@ impl Cdm {
 }
 
 impl CdmSession {
-    /// Set a Service Privacy Certificate for Privacy Mode (optional but recommended).
+    /// set a service privacy certificate for Privacy Mode (optional but recommended).
     ///
-    /// The Service Certificate is used to encrypt Client IDs in Licenses. This is also
+    /// the service Certificate is used to encrypt Client IDs in Licenses. This is also
     /// known as Privacy Mode and may be required for some services or for some devices.
     /// Chrome CDM requires it as of the enforcement of VMP (Verified Media Path).
     ///
