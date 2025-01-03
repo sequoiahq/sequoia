@@ -46,9 +46,8 @@ const ROOT_PUBLIC_KEY_N: [u8; 384] = [
     104, 232, 9, 151, 17, 60, 219, 3, 144, 101, 195, 57, 254, 180,
 ];
 
-/// Widevine CDM (Content Decryption Module)
-///
-/// The CDM can be cheaply cloned since it uses an [`Arc`] inside.
+// widevine cdm (content decryption module)
+/// the cdm can be cheaply cloned since it uses an [`Arc`] inside
 #[derive(Clone)]
 pub struct Cdm {
     inner: Arc<CdmInner>,
