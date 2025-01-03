@@ -133,15 +133,15 @@ impl TryFrom<&Vec<u8>> for ServiceCertificate {
     }
 }
 
-/// Widevine license type
+// license type
 #[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub enum LicenseType {
-    /// Normal one-time-use license
+    // normal one-time-use license. you'll use this in almost all providers
     #[default]
     STREAMING,
-    /// Offline-use licence, usually for downloaded content
+    /// offline-use licence, usually for downloaded content, e.g netflix offline downloads
     OFFLINE,
-    /// License type decision is left to provider
+    /// license type decision is left to provider
     AUTOMATIC,
 }
 
