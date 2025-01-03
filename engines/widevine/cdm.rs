@@ -58,7 +58,7 @@ struct CdmInner {
     session_ctr: AtomicU64,
 }
 
-/// Session with the CDM
+/// session with the CDM
 pub struct CdmSession {
     device: Arc<Device>,
     number: u64,
