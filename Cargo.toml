@@ -1,0 +1,18 @@
+[package]
+name = "deezer_decoder"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+regex = "1.5"
+crossterm = "0.27"
+terminal-spinners = "0.1"
+chrono = "0.4.39"
+widevine = "0.1.0"
+clap = "3.0"
+reqwest = { version = "0.11", features = ["blocking", "json"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+url = "2.2"
+tokio = { version = "1", features = ["full"] } 
+urlencoding = "2.1.3"
