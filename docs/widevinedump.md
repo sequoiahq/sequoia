@@ -1,13 +1,13 @@
-Recently, Telly (**we explained who was above**), disguising as "Widevinedump" on Github, released a series of tools claiming to allow users to download content from popular streaming platforms like Disney+, Amazon, and Netflix. While these tools appeared legitimate and functional, there is indeed story behind that. As said before, this user was a scammer disguised, so from now on, **we're gonna call him Telly, not Widevinedump**.
+Years ago, Telly, disguising as "Widevinedump" on Github, released a series of tools claiming to allow users to download content from popular streaming platforms like Disney+, Amazon, and Netflix. While these tools appeared legitimate and functional, there is indeed story behind that. As said before, this user was a scammer disguised, so from now on, **we're gonna call him Telly, not Widevinedump**.
 
 ### The Tools 
 
 Telly releases various tools for different streaming services, as shown in the image below.
 ![Telly Profile](https://i.imgur.com/HVG2XgW.jpeg)
 
-We can see that he was providing tools for AMZN (Prime Video), DSNP (Disney Plus), NF (Netflix) and GPLAY (Google Play Movies), between others. He also included an **Lenovo L1 CDM** (**we talked above about what was a CDM and its levels**), which appeared to be **blocked in AMZN and DSNP**, but working in NF and other sites that required an L1 CDM.
+We can see that he was providing tools for AMZN (Prime Video), DSNP (Disney Plus), NF (Netflix) and GPLAY (Google Play Movies), between others. He also included an **Lenovo L1 CDM** (**I've talked previously about what was a CDM and its levels**), which appeared to be **blocked in AMZN and DSNP**, but working in NF and other sites that required an L1 CDM.
 
-Obviously, the L1 CDM was quickly burned (check above for the definition).
+Obviously, the L1 CDM was quickly burned.
 
 The tools themselves were outdated but working. As we talked earlier, Telly ~~was~~ **is** a scammer, so it's almost sure that these tools weren't developed by him but stole from another individual/s. 
 
