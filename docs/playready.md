@@ -49,7 +49,7 @@ A PlayReady PSSH comprises a PlayReady Object, which contains one or more PlayRe
 
 ### License Request
 
-Client-server communication in PlayReady operates entirely through XML.
+Client-server communication in PlayReady operates entirely through XML, which is kind of insecure.
 
 - The WRM Header is embedded in the `ContentHeader` section of the license request.
 - To secure the communication, the WMRMServer public key encrypts the keys, ensuring only the server can read them.
