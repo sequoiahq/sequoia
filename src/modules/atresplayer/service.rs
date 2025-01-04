@@ -40,7 +40,7 @@ pub async fn get_dash_hevc_source(
 
     let res = client
         .get(url)
-        .header("User-Agent", "Mozilla/5.0")
+        .header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36")
         .header("Cookie", cookie_header)
         .send()
         .await
