@@ -12,9 +12,14 @@ mod modules {
 use clap::{App, Arg};
 use std::process::exit;
 
+/*
+THIS IS A WORK IN PROGRESS. 
+I'M WORKING IN A NEW COMMAND PARSER (LOADING SERVICES DYNAMICALLY)
+*/
+
 #[tokio::main]
 async fn main() {
-    // Initialize CLI argument parser
+    // init cli args parser
     let matches = App::new("tumble - widevine DRM downloader")
         .version("1.0")
         .about("Downloads media content")
