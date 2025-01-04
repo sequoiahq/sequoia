@@ -1,5 +1,5 @@
 [package]
-name = "deezer_decoder"
+name = "app"
 version = "0.1.0"
 edition = "2021"
 
