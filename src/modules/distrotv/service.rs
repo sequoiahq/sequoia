@@ -1,3 +1,12 @@
+/*
+
+Service code for DistroTV
+Written by @matt
+
+Authorization: None
+Security: None
+*/
+
 use serde_json::Value;
 use std::error::Error as StdError;
 use std::process::Command;
