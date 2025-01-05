@@ -1,8 +1,16 @@
+/*
+
+Service code for BiliBili
+Written by @matt
+
+Authorization: Cookies
+Security: None
+
+API changed recently; script doesn't work.
+*/
+
 use reqwest::Client;
 use std::error::Error;
-
-// in progress. NOT WORKING ATM
-
 pub async fn fetch_manifest_url(url: &str) -> Result<(), Box<dyn Error>> {
     // parse videoid from url
     let video_id = extract_video_id(url).ok_or("Invalid URL format for Bilibili")?;
@@ -13,7 +21,7 @@ pub async fn fetch_manifest_url(url: &str) -> Result<(), Box<dyn Error>> {
         video_id
     );
 
-    // load cookies from helper 
+    // load cookies from helper
     let cookies = crate::modules::cookies::get_cookies_from_netscape("./bb.txt")?; // to-do: dynamic cookie loading in toml config
     let cookie_header = cookies
         .into_iter()
