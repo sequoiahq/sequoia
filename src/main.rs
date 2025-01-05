@@ -7,98 +7,67 @@ mod modules {
     pub mod cookies;
     pub mod deezer;
     pub mod nbc;
+    pub mod bilibili;
 }
 
 use clap::{App, Arg};
 use std::process::exit;
-
-/*
-THIS IS A WORK IN PROGRESS. 
-I'M WORKING IN A NEW COMMAND PARSER (LOADING SERVICES DYNAMICALLY)
-*/
+use tokio;
 
 #[tokio::main]
 async fn main() {
-    // init cli args parser
+    // cli arg parser
     let matches = App::new("tumble - widevine DRM downloader")
         .version("1.0")
         .about("Downloads media content")
-        .arg(
-            Arg::new("keys")
-                .short('k')
-                .long("keys")
-                .takes_value(true)
-                .help("Run the Deezer handler with the given key"),
-        )
         .arg(
             Arg::new("dl")
                 .short('d')
                 .long("download")
                 .takes_value(true)
-                .help("Fetch the NBC video with the given URL"),
-        )
-        .arg(
-            Arg::new("atresplayer")
-                .short('a')
-                .long("atresplayer")
-                .takes_value(true)
-                .help("Fetch the Atresplayer video with the given URL and cookies file"),
+                .help("Download media by specifying service and URL in the format: SERVICE,URL,[COOKIE_FILE]"),
         )
         .get_matches();
 
-    // Handle 'keys' argument for Deezer
-    if let Some(key) = matches.value_of("keys") {
-        if key == "deezer" {
-            match crate::modules::deezer::cbc::fetch_and_decode() {
-                Ok(final_result) => println!("Key from bundle: {}", final_result),
-                Err(e) => eprintln!("Error occurred: {}", e),
-            }
-        }
-    }
-
-    // Handle 'dl' argument for NBC
-    if let Some(url) = matches.value_of("dl") {
-        println!("Fetching video from NBC...");
-        match crate::modules::nbc::service::fetch_video_url(url) {
-            Ok(playback_url) => println!("Playback URL: {}", playback_url),
-            Err(e) => eprintln!("Error occurred: {}", e),
-        }
-    }
-
-    // Handle 'atresplayer' argument for Atresplayer
-    if let Some(arg) = matches.value_of("atresplayer") {
+    // dl argument for services
+    if let Some(arg) = matches.value_of("dl") {
         let parts: Vec<&str> = arg.split(',').collect();
-        if parts.len() != 2 {
-            eprintln!("Usage: --atresplayer <episode_url>,<cookie_file_path>");
+        if parts.len() < 2 || parts.len() > 3 {
+            eprintln!("Usage: --download <SERVICE>,<URL>[,COOKIE_FILE]");
             exit(1);
         }
 
-        let episode_url = parts[0];
-        let cookie_file = parts[1];
+        let service = parts[0].to_lowercase();
+        let url = parts[1];
+        let cookie_file = parts.get(2).cloned();
 
-        // Get cookies from the Netscape-style cookie file
-        match crate::modules::atresplayer::service::fetch_cookies(cookie_file) {
-            Ok(cookies) => {
-                let episode_id = episode_url
-                    .split("_")
-                    .last()
-                    .unwrap_or_default()
-                    .split("/")
-                    .next()
-                    .unwrap_or_default();
-                let api_url = format!(
-                    "https://api.atresplayer.com/player/v1/episode/{}?NODRM=true",
-                    episode_id
-                );
-
-                match crate::modules::atresplayer::service::get_dash_hevc_source(&api_url, &cookies)
-                    .await
-                {
-                    Ok(src) => println!("Found DASH HEVC source: {}", src),
+        match service.as_str() {
+            "bilibili" => {
+                if let Err(e) = modules::bilibili::service::fetch_manifest_url(url).await {
+                    eprintln!("Error with Bilibili service: {}", e);
+                }
+            }
+            "nbc" => {
+                println!("Fetching video from NBC...");
+                match modules::nbc::service::fetch_video_url(url) {
+                    Ok(playback_url) => println!("Playback URL: {}", playback_url),
                     Err(e) => eprintln!("Error occurred: {}", e),
                 }
             }
-            Err(e) => eprintln!("Failed to load cookies: {}", e),
+            "atresplayer" => {
+                if let Some(cookie_file) = cookie_file {
+                    if let Err(e) = modules::atresplayer::service::download_episode(url, cookie_file).await {
+                        eprintln!("Error with Atresplayer service: {}", e);
+                    }
+                } else {
+                    eprintln!("Atresplayer requires a cookie file: --download atresplayer,<URL>,<COOKIE_FILE>");
+                    exit(1);
+                }
+            }
+            _ => {
+                eprintln!("Unsupported service: {}", service);
+                exit(1);
+            }
         }
     }
 }
