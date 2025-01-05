@@ -138,7 +138,7 @@ pub fn download_video(
     Ok(())
 }
 
-pub async fn fetch_and_process_video(
+/*pub async fn fetch_and_process_video(
     show_url: &str,
     quality: Option<&str>,
 ) -> Result<(), Box<dyn StdError>> {
@@ -154,4 +154,4 @@ pub async fn fetch_and_process_video(
     println!("Download complete");
 
     Ok(())
-}
+}*/
