@@ -107,6 +107,7 @@ pub fn create_filename(show_data: &Value) -> Result<String, Box<dyn StdError>> {
 }
 
 // dl video
+// TO-DO: Put that in another function (i.e refactoring; download.rs).
 pub fn download_video(
     m3u8_url: &str,
     filename: &str,
