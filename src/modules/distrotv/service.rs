@@ -5,6 +5,9 @@ Written by @matt
 
 Authorization: None
 Security: None
+
+Check the documentation for more detailed information about the API;
+my code is a little bit of a mess and maybe you get it better there,
 */
 
 use serde_json::Value;
