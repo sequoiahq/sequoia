@@ -2,7 +2,7 @@
 
 DistroTV is an ad-supported streaming service launched by DistroScale in 2021.
 
-![Screenshot](193604.png)
+![Screenshot](193604.webp)
 
 
 The platform doesn't have any kind off UUID for a show unlike most services. A show's URL will look something like this: `https://www.distro.tv/show/pablo`, so we can extract the show name by just extracting the path after /show. From now on we'll use the show Pablo as an example.
