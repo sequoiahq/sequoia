@@ -41,9 +41,6 @@ Contributions are welcome! If you have ideas for new features or improvements, f
 ## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-## Acknowledgments
-Special thanks to all contributors and the open-source community for their support and inspiration.
-
 ---
 
 **Note**: This toolkit is intended for educational and research purposes only. You are on your own with the usage of this tool.
