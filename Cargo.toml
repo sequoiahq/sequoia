@@ -6,9 +6,7 @@ edition = "2021"
 [dependencies]
 regex = "1.5"
 crossterm = "0.27"
-terminal-spinners = "0.1"
 chrono = "0.4.39"
-widevine = "0.1.0"
 clap = "3.0"
 reqwest = { version = "0.11", features = ["blocking", "json"] }
 serde = { version = "1.0", features = ["derive"] }
