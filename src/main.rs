@@ -17,7 +17,6 @@ use std::process::exit;
 
 #[tokio::main]
 async fn main() {
-    // cli arg parser
     let matches = App::new("Dorta")
         .version("1.0")
         .about("Reverse Engineering Toolkit")
@@ -28,9 +27,15 @@ async fn main() {
                 .takes_value(true)
                 .help("Download media by specifying service and URL in the format: SERVICE,URL,[COOKIE_FILE]"),
         )
+        .arg(
+            Arg::new("fairplay")
+                .long("fairplay")
+                .takes_value(true)
+                .help("Decrypt a FairPlay protected binary with the format: SRC,DEST"),
+        )
         .get_matches();
 
-    // handle download arg
+    // dl arg
     if let Some(arg) = matches.value_of("dl") {
         let parts: Vec<&str> = arg.split(',').collect();
         if parts.len() < 2 || parts.len() > 3 {
@@ -59,9 +64,7 @@ async fn main() {
                         eprintln!("Error with Atresplayer service: {}", e);
                     }
                 } else {
-                    eprintln!(
-                        "Service requires a cookie file: --download <SERVICE>,<URL>,<COOKIE_FILE>"
-                    );
+                    eprintln!("Service requires a cookie file: --download <SERVICE>,<URL>,<COOKIE_FILE>");
                     exit(1);
                 }
             }
@@ -70,26 +73,32 @@ async fn main() {
                     eprintln!("Error with DistroTV service: {}", e);
                 }
             }
-            "fairplay" => {
-                if let Err(e) = handle_fairplay(url).await {
-                    eprintln!("Error with FairPlay service: {}", e);
-                }
-            }
             _ => {
                 eprintln!("Unsupported service: {}", service);
                 exit(1);
             }
         }
     }
+
+    // fairplay arg
+    if let Some(arg) = matches.value_of("fairplay") {
+        let parts: Vec<&str> = arg.split(',').collect();
+        if parts.len() != 2 {
+            eprintln!("Usage: --fairplay <SRC>,<DEST>");
+            exit(1);
+        }
+
+        let src = parts[0];
+        let dest = parts[1];
+
+        match modules::fairplay::decrypt(src, dest) {
+            Ok(_) => println!("FairPlay decryption succeeded."),
+            Err(e) => eprintln!("FairPlay decryption failed: {}", e),
+        }
+    }
 }
 
-async fn handle_fairplay(url: &str) -> Result<(), Box<dyn std::error::Error>> {
-    println!("Handling FairPlay DRM decryption...");
-    // Implement FairPlay decryption logic here
-    modules::fairplay::service::decrypt_fairplay(url).await?;
-    Ok(())
-}
-
+// b-global
 async fn handle_bilibili(url: &str) -> Result<(), Box<dyn std::error::Error>> {
     modules::bilibili::service::fetch_manifest_url(url).await?;
     Ok(())
@@ -106,6 +115,7 @@ async fn handle_nbc(url: &str) -> Result<(), Box<dyn std::error::Error>> {
     }
 }
 
+// a3p
 async fn handle_atresplayer(
     url: &str,
     cookie_file: &str,
@@ -114,6 +124,7 @@ async fn handle_atresplayer(
     Ok(())
 }
 
+// distrotv
 async fn handle_distrotv(url: &str) -> Result<(), Box<dyn std::error::Error>> {
     let show_data = modules::distrotv::service::get_api_data(url).await?;
     let m3u8_url = modules::distrotv::service::get_m3u8_url(&show_data)?;
