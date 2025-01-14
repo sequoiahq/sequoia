@@ -1,5 +1,5 @@
 [package]
-name = "app"
+name = "dorta"
 version = "0.3.0"
 edition = "2021"
 
