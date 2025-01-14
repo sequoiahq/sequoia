@@ -9,6 +9,7 @@ mod modules {
     pub mod deezer;
     pub mod distrotv;
     pub mod nbc;
+    pub mod fairplay;
 }
 
 use clap::{App, Arg};
@@ -17,9 +18,9 @@ use std::process::exit;
 #[tokio::main]
 async fn main() {
     // cli arg parser
-    let matches = App::new("Tumble - Widevine DRM Downloader")
+    let matches = App::new("Dorta")
         .version("1.0")
-        .about("Downloads media content from various services")
+        .about("Reverse Engineering Toolkit")
         .arg(
             Arg::new("dl")
                 .short('d')
@@ -69,6 +70,11 @@ async fn main() {
                     eprintln!("Error with DistroTV service: {}", e);
                 }
             }
+            "fairplay" => {
+                if let Err(e) = handle_fairplay(url).await {
+                    eprintln!("Error with FairPlay service: {}", e);
+                }
+            }
             _ => {
                 eprintln!("Unsupported service: {}", service);
                 exit(1);
@@ -77,7 +83,13 @@ async fn main() {
     }
 }
 
-// b-global
+async fn handle_fairplay(url: &str) -> Result<(), Box<dyn std::error::Error>> {
+    println!("Handling FairPlay DRM decryption...");
+    // Implement FairPlay decryption logic here
+    modules::fairplay::service::decrypt_fairplay(url).await?;
+    Ok(())
+}
+
 async fn handle_bilibili(url: &str) -> Result<(), Box<dyn std::error::Error>> {
     modules::bilibili::service::fetch_manifest_url(url).await?;
     Ok(())
@@ -94,7 +106,6 @@ async fn handle_nbc(url: &str) -> Result<(), Box<dyn std::error::Error>> {
     }
 }
 
-// a3p
 async fn handle_atresplayer(
     url: &str,
     cookie_file: &str,
@@ -103,10 +114,7 @@ async fn handle_atresplayer(
     Ok(())
 }
 
-// distro
 async fn handle_distrotv(url: &str) -> Result<(), Box<dyn std::error::Error>> {
-    // println!("Fetching video from DistroTV...");
-
     let show_data = modules::distrotv::service::get_api_data(url).await?;
     let m3u8_url = modules::distrotv::service::get_m3u8_url(&show_data)?;
     let filename = modules::distrotv::service::create_filename(&show_data)?;
