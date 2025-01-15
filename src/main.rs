@@ -6,15 +6,17 @@ mod modules {
     pub mod atresplayer;
     pub mod bilibili;
     pub mod cookies;
+    pub mod crackle;
     pub mod deezer;
     pub mod distrotv;
     pub mod download;
     pub mod nbc;
 }
 
+use crate::modules::crackle::service::process_crackle_url;
 use clap::{App, Arg};
 use modules::download::download_video;
-use std::process::exit; // Importing the function
+use std::process::exit;
 
 #[tokio::main]
 async fn main() {
@@ -27,6 +29,21 @@ async fn main() {
                 .long("download")
                 .takes_value(true)
                 .help("Download media by specifying service and URL in the format: SERVICE,URL,[COOKIE_FILE]"),
+        )
+        .arg(
+            Arg::new("drm")
+                .short('r')
+                .long("drm")
+                .takes_value(true)
+                .possible_values(&["playready", "widevine"])
+                .help("Specify the DRM type: playready or widevine"),
+        )
+        .arg(
+            Arg::new("filename")
+                .short('f')
+                .long("filename")
+                .takes_value(true)
+                .help("Specify the filename to save the downloaded media"),
         )
         .get_matches();
 
@@ -42,7 +59,17 @@ async fn main() {
         let url = parts[1];
         let cookie_file = parts.get(2).cloned();
 
+        let drm = matches.value_of("drm");
+        let filename = matches
+            .value_of("filename")
+            .unwrap_or("downloaded_video.mkv");
+
         match service.as_str() {
+            "crackle" => {
+                if let Err(e) = process_crackle_url(url, drm, filename).await {
+                    eprintln!("{}", e);
+                }
+            }
             "bilibili" => {
                 if let Err(e) = handle_bilibili(url).await {
                     eprintln!("Error with Bilibili service: {}", e);
@@ -78,7 +105,7 @@ async fn main() {
     }
 
     // fairplay arg
- /*    if let Some(arg) = matches.value_of("fairplay") {
+    /*    if let Some(arg) = matches.value_of("fairplay") {
         let parts: Vec<&str> = arg.split(',').collect();
         if parts.len() != 2 {
             eprintln!("Usage: --fairplay <SRC>,<DEST>");
