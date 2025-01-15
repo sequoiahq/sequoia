@@ -105,7 +105,6 @@ pub async fn fetch_and_process_video(
     let m3u8_url = get_m3u8_url(&show_data)?;
     let filename = create_filename(&show_data)?;
 
-    // Call the imported download_video function
     download_video(&m3u8_url, &filename, quality)?;
 
     println!("Download complete");
