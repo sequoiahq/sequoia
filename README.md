@@ -1,6 +1,6 @@
-# Dorta - Reverse Engineering Toolkit 
+# Sequoia - Reverse Engineering Toolkit 
 
-**Dorta** is a collection of tools and modules for reverse engineering streaming services, DRM systems, and multimedia content.
+**Sequoia** is a collection of tools and modules for reverse engineering streaming services, DRM systems, and multimedia content.
 
 ## Modules
 
