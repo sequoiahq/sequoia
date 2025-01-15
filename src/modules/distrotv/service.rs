@@ -9,10 +9,9 @@ Security: None
 Check the documentation for more detailed information about the API;
 my code is a little bit of a mess and maybe you get it better there,
 */
-
+use crate::modules::download::download_video;
 use serde_json::Value;
 use std::error::Error as StdError;
-use std::process::Command;
 use urlencoding::encode;
 
 // fetch api data from url
@@ -28,7 +27,6 @@ pub async fn get_api_data(show_url: &str) -> Result<Value, Box<dyn StdError>> {
         "https://tv.jsrdn.com/tv_v5/show.php?name={}",
         show_name_encoded
     );
-    // println!("Fetching API data from: {}", api_url);
 
     let response = reqwest::get(&api_url).await?;
     let data = response.json::<Value>().await?;
@@ -36,24 +34,17 @@ pub async fn get_api_data(show_url: &str) -> Result<Value, Box<dyn StdError>> {
 }
 
 pub fn get_m3u8_url(show_data: &Value) -> Result<String, String> {
-    // println!("API Response: {:?}", show_data);s
-
-    // extract show_id from response
     let show_id = show_data
         .get("shows")
         .and_then(|shows| shows.as_object())
-        .and_then(|shows| shows.keys().next()) // Get the first key (show_id)
+        .and_then(|shows| shows.keys().next())
         .ok_or("No show found in the response.")?;
 
-    //println!("Extracted show_id: {}", show_id);
-
-    // get show object using show_id
     let show = show_data
         .get("shows")
         .and_then(|shows| shows.get(show_id))
         .ok_or("Show data not found for the extracted show_id.")?;
 
-    // extract 1st episode
     let episode = show
         .get("seasons")
         .and_then(|seasons| seasons.as_array())
@@ -63,7 +54,6 @@ pub fn get_m3u8_url(show_data: &Value) -> Result<String, String> {
         .and_then(|episodes| episodes.first())
         .ok_or("No episodes found in the show data.")?;
 
-    // get m3u8
     let m3u8_url = episode
         .get("content")
         .and_then(|content| content.get("url"))
@@ -73,16 +63,13 @@ pub fn get_m3u8_url(show_data: &Value) -> Result<String, String> {
     Ok(m3u8_url.to_string())
 }
 
-// create filename from metadata. TO-DO -> P2P naming
+// create filename from metadata
 pub fn create_filename(show_data: &Value) -> Result<String, Box<dyn StdError>> {
-    // Dynamically extract the show_id from the response
     let show_id = show_data
         .get("shows")
         .and_then(|shows| shows.as_object())
-        .and_then(|shows| shows.keys().next()) // Get the first key (show_id)
+        .and_then(|shows| shows.keys().next())
         .ok_or("No show found in the response.")?;
-
-    // println!("Extracted show_id for filename creation: {}", show_id);
 
     let show_title = show_data
         .get("shows")
@@ -110,52 +97,18 @@ pub fn create_filename(show_data: &Value) -> Result<String, Box<dyn StdError>> {
 }
 
 // dl video
-// TO-DO: Put that in another function (i.e refactoring; download.rs).
-pub fn download_video(
-    m3u8_url: &str,
-    filename: &str,
-    quality: Option<&str>,
-) -> Result<(), Box<dyn StdError>> {
-    let mut command = vec![
-        "./N_m3u8DL-RE",
-        m3u8_url,
-        "--save-name",
-        filename,
-        "--thread-count",
-        "40",
-        "--mux-after-done",
-        "mkv",
-        "--auto-select",
-    ];
-
-    if let Some(q) = quality {
-        command.push("--select-video");
-        command.push(q);
-    }
-
-    let status = Command::new(command[0]).args(&command[1..]).status()?;
-
-    if !status.success() {
-        Err("Download failed")?
-    }
-
-    Ok(())
-}
-
-/*pub async fn fetch_and_process_video(
+pub async fn fetch_and_process_video(
     show_url: &str,
     quality: Option<&str>,
 ) -> Result<(), Box<dyn StdError>> {
-    // println!("Fetching API data for URL: {}", show_url);
-
     let show_data = get_api_data(show_url).await?;
     let m3u8_url = get_m3u8_url(&show_data)?;
     let filename = create_filename(&show_data)?;
 
-    // println!("Starting download: {} -> {}", m3u8_url, filename);
+    // Call the imported download_video function
     download_video(&m3u8_url, &filename, quality)?;
-    // println!("Download complete: {}", filename);
+
     println!("Download complete");
 
     Ok(())
-}*/
+}
