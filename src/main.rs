@@ -8,12 +8,13 @@ mod modules {
     pub mod cookies;
     pub mod deezer;
     pub mod distrotv;
+    pub mod download;
     pub mod nbc;
-    pub mod fairplay;
 }
 
 use clap::{App, Arg};
-use std::process::exit;
+use modules::download::download_video;
+use std::process::exit; // Importing the function
 
 #[tokio::main]
 async fn main() {
@@ -26,12 +27,6 @@ async fn main() {
                 .long("download")
                 .takes_value(true)
                 .help("Download media by specifying service and URL in the format: SERVICE,URL,[COOKIE_FILE]"),
-        )
-        .arg(
-            Arg::new("fairplay")
-                .long("fairplay")
-                .takes_value(true)
-                .help("Decrypt a FairPlay protected binary with the format: SRC,DEST"),
         )
         .get_matches();
 
@@ -64,7 +59,9 @@ async fn main() {
                         eprintln!("Error with Atresplayer service: {}", e);
                     }
                 } else {
-                    eprintln!("Service requires a cookie file: --download <SERVICE>,<URL>,<COOKIE_FILE>");
+                    eprintln!(
+                        "Service requires a cookie file: --download <SERVICE>,<URL>,<COOKIE_FILE>"
+                    );
                     exit(1);
                 }
             }
@@ -81,7 +78,7 @@ async fn main() {
     }
 
     // fairplay arg
-    if let Some(arg) = matches.value_of("fairplay") {
+ /*    if let Some(arg) = matches.value_of("fairplay") {
         let parts: Vec<&str> = arg.split(',').collect();
         if parts.len() != 2 {
             eprintln!("Usage: --fairplay <SRC>,<DEST>");
@@ -95,7 +92,7 @@ async fn main() {
             Ok(_) => println!("FairPlay decryption succeeded."),
             Err(e) => eprintln!("FairPlay decryption failed: {}", e),
         }
-    }
+    }*/
 }
 
 // b-global
@@ -131,7 +128,7 @@ async fn handle_distrotv(url: &str) -> Result<(), Box<dyn std::error::Error>> {
     let filename = modules::distrotv::service::create_filename(&show_data)?;
 
     println!("Starting download: {} -> {}", m3u8_url, filename);
-    modules::distrotv::service::download_video(&m3u8_url, &filename, None)?;
+    download_video(&m3u8_url, &filename, None)?; // Call refactored function
 
     println!("Download complete: {}", filename);
     Ok(())
