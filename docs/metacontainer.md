@@ -1,4 +1,4 @@
-The Sequoia MetaContainer is a JSON structure for storing information about the CDM. This ser
+The Sequoia MetaContainer is a JSON structure for storing information about the CDM. 
 #### Structure
 
 ```json
