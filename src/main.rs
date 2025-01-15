@@ -17,7 +17,7 @@ use std::process::exit;
 
 #[tokio::main]
 async fn main() {
-    let matches = App::new("Dorta")
+    let matches = App::new("Sequoia")
         .version("1.0")
         .about("Reverse Engineering Toolkit")
         .arg(
