@@ -2,11 +2,13 @@ use regex::Regex;
 use std::error::Error as StdError;
 
 /*
-    Service code
+    Service code for MagellanTV
     Written by @matt
 
     Authorization: None
     Security: UHD@None
+
+    Notes: TV series not yet supported, only movie docus.
 */
 
 pub async fn fetch_video_data(
