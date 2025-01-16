@@ -1,7 +1,3 @@
-mod utils {
-    pub mod logger;
-}
-
 mod modules {
     pub mod atresplayer;
     pub mod bilibili;
@@ -10,10 +6,13 @@ mod modules {
     pub mod deezer;
     pub mod distrotv;
     pub mod download;
+    pub mod magellantv;
     pub mod nbc;
 }
 
 use crate::modules::crackle::service::process_crackle_url;
+use crate::modules::magellantv::service::get_m3u8_url;
+use crate::modules::magellantv::service::{create_filename, fetch_video_data};
 use clap::{App, Arg};
 use modules::download::download_video;
 use std::process::exit;
@@ -21,43 +20,44 @@ use std::process::exit;
 #[tokio::main]
 async fn main() {
     let matches = App::new("Sequoia")
-        .version("1.0")
-        .about("Reverse Engineering Toolkit")
-        .arg(
+      .version("1.0")
+      .about("Reverse Engineering Toolkit")
+      .arg(
             Arg::new("dl")
-                .short('d')
-                .long("download")
-                .takes_value(true)
-                .help("Download media by specifying service and URL in the format: SERVICE,URL,[COOKIE_FILE]"),
+              .short('d')
+              .long("download")
+              .takes_value(true)
+              .help("Download media by specifying service and URL in the format: SERVICE,URL,[COOKIE_FILE]"),
         )
-        .arg(
+      .arg(
             Arg::new("drm")
-                .short('r')
-                .long("drm")
-                .takes_value(true)
-                .possible_values(&["playready", "widevine"])
-                .help("Specify the DRM type: playready or widevine"),
+              .short('r')
+              .long("drm")
+              .takes_value(true)
+              .possible_values(&["playready", "widevine"])
+              .help("Specify the DRM type: playready or widevine"),
         )
-        .arg(
+     .arg(
             Arg::new("filename")
-                .short('f')
-                .long("filename")
-                .takes_value(true)
-                .help("Specify the filename to save the downloaded media"),
+             .short('f')
+             .long("filename")
+             .takes_value(true)
+             .help("Specify the filename to save the downloaded media"),
         )
-        .get_matches();
+     .get_matches();
 
     // dl arg
     if let Some(arg) = matches.value_of("dl") {
         let parts: Vec<&str> = arg.split(',').collect();
-        if parts.len() < 2 || parts.len() > 3 {
-            eprintln!("Usage: --download <SERVICE>,<URL>[,COOKIE_FILE]");
+        if parts.len() < 3 || parts.len() > 4 {
+            eprintln!("Usage: --download <SERVICE>,<URL>,[,COOKIE_FILE]");
             exit(1);
         }
 
         let service = parts[0].to_lowercase();
         let url = parts[1];
-        let cookie_file = parts.get(2).cloned();
+        let video_type = parts[2];
+        let cookie_file = parts.get(3).cloned();
 
         let drm = matches.value_of("drm");
         let filename = matches
@@ -87,7 +87,7 @@ async fn main() {
                     }
                 } else {
                     eprintln!(
-                        "Service requires a cookie file: --download <SERVICE>,<URL>,<COOKIE_FILE>"
+                        "Service requires a cookie file: --download <SERVICE>,<URL>,<VIDEO_TYPE>,<COOKIE_FILE>"
                     );
                     exit(1);
                 }
@@ -97,30 +97,47 @@ async fn main() {
                     eprintln!("Error with DistroTV service: {}", e);
                 }
             }
+            "magellantv" => {
+                if let Err(e) = handle_magellantv(url, video_type).await {
+                    eprintln!("Error with MagellanTV service: {}", e);
+                }
+            }
             _ => {
                 eprintln!("Unsupported service: {}", service);
                 exit(1);
             }
         }
     }
-
-    // fairplay arg
-    /*    if let Some(arg) = matches.value_of("fairplay") {
-        let parts: Vec<&str> = arg.split(',').collect();
-        if parts.len() != 2 {
-            eprintln!("Usage: --fairplay <SRC>,<DEST>");
-            exit(1);
-        }
-
-        let src = parts[0];
-        let dest = parts[1];
-
-        match modules::fairplay::decrypt(src, dest) {
-            Ok(_) => println!("FairPlay decryption succeeded."),
-            Err(e) => eprintln!("FairPlay decryption failed: {}", e),
-        }
-    }*/
 }
+
+async fn handle_magellantv(url: &str, video_type: &str) -> Result<(), Box<dyn std::error::Error>> {
+    let json = fetch_video_data(url, video_type).await?;
+    let m3u8_url = get_m3u8_url(&json)?;
+    let filename = create_filename(&json)?;
+
+    println!("Starting download: {} -> {}", m3u8_url, filename);
+    download_video(&m3u8_url, &filename, None)?; // Call refactored function
+
+    println!("Download complete: {}", filename);
+    Ok(())
+}
+
+// fairplay arg
+/*    if let Some(arg) = matches.value_of("fairplay") {
+    let parts: Vec<&str> = arg.split(',').collect();
+    if parts.len() != 2 {
+        eprintln!("Usage: --fairplay <SRC>,<DEST>");
+        exit(1);
+    }
+
+    let src = parts[0];
+    let dest = parts[1];
+
+    match modules::fairplay::decrypt(src, dest) {
+        Ok(_) => println!("FairPlay decryption succeeded."),
+        Err(e) => eprintln!("FairPlay decryption failed: {}", e),
+    }
+}*/
 
 // b-global
 async fn handle_bilibili(url: &str) -> Result<(), Box<dyn std::error::Error>> {
