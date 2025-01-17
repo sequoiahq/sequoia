@@ -1,4 +1,4 @@
-use crate::utils::logger::log_info;
+/*use crate::utils::logger::log_info;
 use regex::Regex;
 use reqwest::blocking::get;
 
@@ -80,3 +80,4 @@ fn decode_bytes(input: &str) -> Result<String, Box<dyn std::error::Error>> {
 
     decoded_bytes.map(|bytes| bytes.into_iter().collect())
 }
+*/
