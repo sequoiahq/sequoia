@@ -113,10 +113,11 @@ async fn main() {
 async fn handle_magellantv(url: &str, video_type: &str) -> Result<(), Box<dyn std::error::Error>> {
     let json = fetch_video_data(url, video_type).await?;
     let m3u8_url = get_m3u8_url(&json)?;
-    let filename = create_filename(&json)?;
+    
+    let filename = create_filename(&json, video_type)?; 
 
     println!("Starting download: {} -> {}", m3u8_url, filename);
-    download_video(&m3u8_url, &filename, None)?; // Call refactored function
+    download_video(&m3u8_url, &filename, None)?;
 
     println!("Download complete: {}", filename);
     Ok(())
