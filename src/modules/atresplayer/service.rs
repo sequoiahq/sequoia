@@ -4,11 +4,10 @@ Service code for Atresplayer
 Written by @matt
 
 Authorization: Cookies
-Security: UHD@L3 - UHD@SL2000. (WIP)
-          Some titles aren't encrypted.
-          This implementation only supports unencrypted (most of the content, by the way), but
-          decryption is a generic Widevine/PlayReady request without special headers.
-*/
+Security: UHD@L3 - UHD@SL2000.
+          Almost all titles aren't encrypted, only new ones and only if
+          you use the MPD (required to get 2160p). Using HLS you get up 
+          to 1080p unencrypted. */
 
 use crate::modules::cookies;
 use reqwest::Client;

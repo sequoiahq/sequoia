@@ -3,6 +3,18 @@ use std::error::Error as StdError;
 use reqwest;
 use serde_json::Value;
 
+/*
+
+Service code for MagellanTV
+
+Authorization: None
+Security: None
+
+Theorically, the service is paid, but they give you the HLS location
+with a simple API call (without headers nor Bearer).
+
+*/
+
 pub async fn fetch_video_data(
     url: &str,
     video_type: &str,

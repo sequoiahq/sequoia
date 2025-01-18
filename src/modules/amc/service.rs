@@ -2,6 +2,17 @@ use reqwest::{header, Client, Error};
 use serde::Deserialize;
 use std::collections::HashMap;
 
+/*
+
+Service code for AMC
+Written by @matt
+
+Authorization: None
+Security: FHD@L3
+
+*/
+
+
 #[derive(Deserialize, Debug)]
 struct AnonymousTokenResponse {
     success: bool,
@@ -101,9 +112,6 @@ pub async fn get_anonymous_token() -> Result<String, Error> {
         header::HeaderName::from_static("X-AMCN-App-Version"),
         header::HeaderValue::from_static("3.33.0"),
     );
-    // Remove these lines
-    // headers.insert(header::HeaderName::from_static("X-AMCN-Audience-ID"), header::HeaderValue::from_static(""));
-    // headers.insert(header::HeaderName::from_static("X-AMCN-MVPD"), header::HeaderValue::from_static(""));
     headers.insert(
         header::HeaderName::from_static("X-AMCN-Device-Ad-ID"),
         header::HeaderValue::from_static("c420f44f-606e-4026-a203-7a7ab165641c"),
@@ -210,9 +218,6 @@ pub async fn get_license_urls(access_token: String) -> Result<(), Error> {
         header::HeaderName::from_static("X-AMCN-App-Version"),
         header::HeaderValue::from_static("3.33.0"),
     );
-    // Remove these lines
-    // headers.insert(header::HeaderName::from_static("X-AMCN-Audience-ID"), header::HeaderValue::from_static(""));
-    // headers.insert(header::HeaderName::from_static("X-AMCN-MVPD"), header::HeaderValue::from_static(""));
     headers.insert(
         header::HeaderName::from_static("X-AMCN-Device-Ad-ID"),
         header::HeaderValue::from_static("c420f44f-606e-4026-a203-7a7ab165641c"),

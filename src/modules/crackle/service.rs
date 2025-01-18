@@ -1,5 +1,13 @@
 /*
-TO-DO: better regex. only 1 title working atm
+
+Service code for Crackle
+Written by @matt
+
+Authorization: None
+Security: FHD@L3
+
+TO-DO: better regex. only 1 title working at the moment
+Cannot consider this a full service, just a draft.
 */
 use regex::Regex;
 use reqwest::{header::HeaderMap, Client};
