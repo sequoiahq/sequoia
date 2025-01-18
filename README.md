@@ -1,4 +1,4 @@
-# Sequoia - Reverse Engineering Toolkit 
+![image](https://github.com/user-attachments/assets/2f9118a5-7e07-4182-b8b7-679af9a360a9)# Sequoia - Reverse Engineering Toolkit 
 
 **Sequoia** is a collection of tools and modules for reverse engineering streaming services, DRM systems, and multimedia content.
 
@@ -25,4 +25,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 **Note**: This toolkit is intended for educational and research purposes only. You are on your own with the usage of this tool.
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Sample_09-F9_protest_art%2C_Free_Speech_Flag_by_John_Marcotte.svg/1024px-Sample_09-F9_protest_art%2C_Free_Speech_Flag_by_John_Marcotte.svg.png" alt="09f9 flag" width="128" height="77" />
+<img src="https://github.com/user-attachments/assets/3b10f43a-5304-4f9f-8690-d98eb56cc658" alt="09f9 flag" width="128" height="77" />
