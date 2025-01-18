@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/2f9118a5-7e07-4182-b8b7-679af9a360a9)# Sequoia - Reverse Engineering Toolkit 
+# Sequoia - Reverse Engineering Toolkit 
 
 **Sequoia** is a collection of tools and modules for reverse engineering streaming services, DRM systems, and multimedia content.
 
